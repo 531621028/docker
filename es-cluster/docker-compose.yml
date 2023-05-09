@@ -1,13 +1,17 @@
 version: '3.7'
 services:
+  # elasticsearch集群
   kibana:
     image: docker.elastic.co/kibana/kibana:7.3.2
     container_name: kibana72
+    # environment支持字典和数组的形式进行配置
+    # 字典形式 key=value
+    # 数组形式 -key=value
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch1:9200
-      - XPACK_GRAPH_ENABLED=true
-      - TIMELION_ENABLED=true
-      - XPACK_MONITORING_COLLECTION_ENABLED="true"
+      ELASTICSEARCH_HOSTS: http://elasticsearch1:9200
+      XPACK_GRAPH_ENABLED: true
+      TIMELION_ENABLED: true
+      XPACK_MONITORING_COLLECTION_ENABLED: true
     ports:
       - "5601:5601"
     networks:
@@ -29,6 +33,7 @@ services:
       - elasticsearch1
       - elasticsearch2
       - elasticsearch3
+  # elasticsearch集群
   elasticsearch1:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.3.2
     container_name: elasticsearch1
@@ -44,11 +49,13 @@ services:
       memlock:
         soft: -1
         hard: -1
-    ports:
-      - 9200:9200
-      - 9300:9300
+    # 主机端口映射，可以通过宿主机访问容器里面的信息，由于不需要对外暴露，所以可以注释
+    # ports:
+    #   - 9200:9200
+    #   - 9300:9300
     volumes:
       - data1:/usr/share/elasticsearch/data
+    # 
     networks:
       - esnet
   
@@ -90,10 +97,15 @@ services:
     networks:
       - esnet
 
+#配置数据卷
 volumes:
   data1:
+    driver: local
   data2:
+    driver: local
   data3:
+    driver: local
 
+#创建esnet的网络
 networks:
   esnet:
