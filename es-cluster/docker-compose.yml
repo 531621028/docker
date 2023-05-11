@@ -100,11 +100,12 @@ services:
 #配置数据卷
 volumes:
   data1:
-    driver: local
+    # 指定volume的名称，不指定默认是{project_name}_data1，project_name是文件夹的名字
+    name: data1
   data2:
-    driver: local
+    name: data2
   data3:
-    driver: local
+    name: data3
 
 #创建esnet的网络
 networks:
